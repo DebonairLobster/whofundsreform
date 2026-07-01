@@ -1,7 +1,7 @@
 .uk-map-panel { background: #eef3ef; }
 .map-canvas { position: relative; max-width: 580px; margin: 0 auto; }
 .uk-map-panel svg { display: block; width: 100%; height: 650px; }
-.uk-land path { fill: #d5dfd8; stroke: #aebdb3; stroke-width: 2; stroke-linejoin: round; }
+.uk-boundary { fill: #d5dfd8; stroke: #91a398; stroke-width: 1.4; stroke-linejoin: round; }
 .donation-marker { cursor: pointer; outline: none; }
 .donation-marker > circle:first-child { fill: #0d6b52; fill-opacity: .72; stroke: #fff; stroke-width: 1.7; transition: r 120ms ease, fill-opacity 120ms ease; }
 .donation-marker .marker-hit { fill: transparent; stroke: transparent; }
