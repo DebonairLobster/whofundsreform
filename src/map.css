@@ -1,0 +1,22 @@
+.uk-map-panel { background: #eef3ef; }
+.map-canvas { position: relative; max-width: 580px; margin: 0 auto; }
+.uk-map-panel svg { display: block; width: 100%; height: 650px; }
+.uk-land path { fill: #d5dfd8; stroke: #aebdb3; stroke-width: 2; stroke-linejoin: round; }
+.donation-marker { cursor: pointer; outline: none; }
+.donation-marker > circle:first-child { fill: #0d6b52; fill-opacity: .72; stroke: #fff; stroke-width: 1.7; transition: r 120ms ease, fill-opacity 120ms ease; }
+.donation-marker .marker-hit { fill: transparent; stroke: transparent; }
+.donation-marker:hover > circle:first-child,
+.donation-marker:focus > circle:first-child { r: 8; fill-opacity: 1; stroke: #fff; stroke-width: 2.5; }
+.donation-marker:focus > circle:first-child { outline: none; }
+.map-tooltip { position: absolute; top: 18px; left: 18px; width: min(285px, calc(100% - 36px)); padding: 16px 18px; background: rgba(255,255,255,.96); border: 1px solid #cbd6ce; box-shadow: 0 12px 30px rgba(21,42,32,.13); display: flex; flex-direction: column; gap: 5px; pointer-events: none; z-index: 3; }
+.map-tooltip p { margin: 0 0 3px; color: #0d6b52; text-transform: uppercase; letter-spacing: .1em; font-size: 10px; font-weight: 800; }
+.map-tooltip strong { font: 20px/1.15 Georgia,serif; }
+.map-tooltip b { font-size: 17px; }
+.map-tooltip span { color: #5f6b66; font-size: 12px; }
+.map-tooltip small { color: #0d6b52; margin-top: 5px; font-weight: 700; }
+.map-tooltip:not(.visible) { opacity: .82; }
+.map-legend { border-top: 1px solid #d2dcd5; padding: 15px 8px 2px; display: flex; justify-content: space-between; gap: 20px; align-items: center; color: #606c67; font-size: 11px; }
+.map-legend span { white-space: nowrap; font-weight: 700; color: #26322d; }
+.map-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #0d6b52; margin-right: 7px; }
+.map-legend p { margin: 0; text-align: right; line-height: 1.45; }
+@media(max-width:600px){.uk-map-panel svg{height:520px}.map-tooltip{top:8px;left:8px;width:calc(100% - 16px);padding:12px}.map-tooltip strong{font-size:17px}.map-legend{display:block}.map-legend p{text-align:left;margin-top:8px}}
