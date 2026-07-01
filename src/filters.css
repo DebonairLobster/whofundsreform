@@ -1,0 +1,22 @@
+.filters {
+  display: none;
+}
+
+.filters.open {
+  display: grid;
+}
+
+.filter-toggle::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  margin-left: 3px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-2px) rotate(45deg);
+  transition: transform 180ms ease;
+}
+
+.toolbar:has(+ .filters.open) .filter-toggle::after {
+  transform: translateY(2px) rotate(225deg);
+}
