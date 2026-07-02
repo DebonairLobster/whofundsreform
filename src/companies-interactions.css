@@ -21,3 +21,5 @@
   font-weight: 700;
   font-size: 12px;
 }
+.industry-details { scroll-margin-top: 90px; }
+.industry-details-head h2:focus { outline: none; }
