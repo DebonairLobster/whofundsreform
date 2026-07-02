@@ -1,0 +1,34 @@
+.companies-analysis { display:grid; gap:24px; min-width:0; }
+.company-summary { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2fr); border:1px solid #dfe4df; }
+.company-summary article { padding:22px; border-right:1px solid #dfe4df; min-width:0; }
+.company-summary article:last-child { border-right:0; }
+.company-summary span,.company-summary small { display:block; color:#69746f; font-size:12px; }
+.company-summary strong { display:block; font-size:22px; margin-top:9px; overflow-wrap:anywhere; }
+.company-summary small { margin-top:7px; }
+.sic-sectors,.company-ranking { padding:28px; min-width:0; }
+.sector-list article { display:grid; grid-template-columns:38px minmax(0,1fr) auto; gap:14px; align-items:center; padding:15px 0; border-bottom:1px solid #e1e6e2; }
+.sector-list article>span { font:12px ui-monospace,monospace; color:#89938f; }
+.sector-list article div { display:flex; flex-direction:column; gap:5px; }
+.sector-list article small { color:#6b7671; }
+.sector-list article>b { font-size:15px; }
+.company-table-wrap { overflow:auto; max-width:100%; min-width:0; }
+.company-ranking table { min-width:1000px; }
+.company-ranking td { vertical-align:top; white-space:normal; }
+.company-ranking td:first-child { min-width:230px; }
+.company-ranking td:first-child strong,.company-ranking td:first-child small,.company-ranking td:first-child span { display:block; }
+.company-ranking td:first-child small { color:#6b7671; margin:5px 0; }
+.sic-chip { display:block; margin-bottom:6px; padding:6px 8px; background:#edf3ef; font-size:11px; line-height:1.4; }
+.company-ranking td:last-child a { color:#0d6b52; white-space:nowrap; }
+.company-ranking tbody tr:hover { cursor:default; }
+.data-caveat { padding:24px; background:#17201d; color:#fff; }
+.data-caveat strong { font:24px Georgia,serif; }
+.data-caveat p { color:#cad3cf; line-height:1.65; margin-bottom:0; }
+.data-caveat p+p { font-size:13px; color:#aebbb5; }
+@media(max-width:700px){
+  .company-summary { grid-template-columns:minmax(0,1fr) minmax(0,1fr); }
+  .company-summary article:nth-child(2) { border-right:0; }
+  .company-summary article:last-child { grid-column:1/-1; border-top:1px solid #dfe4df; }
+  .sector-list article { grid-template-columns:30px minmax(0,1fr); }
+  .sector-list article>b { grid-column:2; }
+  .sic-sectors,.company-ranking { padding:20px; }
+}

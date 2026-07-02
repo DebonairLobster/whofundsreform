@@ -6,13 +6,14 @@ import { cleanDonation, formatDate, formatMoney } from './utils/data'
 import { Detail } from './components/Detail'
 import { DonationTable } from './components/DonationTable'
 import { PostcodeMap } from './components/PostcodeMap'
+import { CompaniesPage } from './components/CompaniesPage'
 import { Timeline, TypeBreakdown } from './components/Charts'
 
-type View = 'home'|'donations'|'donors'|'map'|'about'|'donor'
+type View = 'home'|'donations'|'donors'|'companies'|'map'|'about'|'donor'
 const route = ():{view:View;donor?:string} => {
   const hash=window.location.hash.slice(1)||'home'
   if(hash.startsWith('donor/')) return {view:'donor',donor:decodeURIComponent(hash.slice(6))}
-  return {view:(['home','donations','donors','map','about'].includes(hash)?hash:'home') as View}
+  return {view:(['home','donations','donors','companies','map','about'].includes(hash)?hash:'home') as View}
 }
 
 function App(){
@@ -31,11 +32,12 @@ function App(){
 
   if(error)return <main className="state"><h1>Could not load the data</h1><p>{error}</p></main>
   return <>
-    <header className="site-header"><div className="wrap nav"><a href="#home" className="brand"><span>WFR</span> Who funds Reform UK?</a><nav aria-label="Primary navigation"><a className={current.view==='donations'?'active':''} href="#donations">Donations</a><a className={current.view==='donors'||current.view==='donor'?'active':''} href="#donors">Donors</a><a className={current.view==='map'?'active':''} href="#map">Map</a><a className={current.view==='about'?'active':''} href="#about">About</a></nav></div></header>
+    <header className="site-header"><div className="wrap nav"><a href="#home" className="brand"><span>WFR</span> Who funds Reform UK?</a><nav aria-label="Primary navigation"><a className={current.view==='donations'?'active':''} href="#donations">Donations</a><a className={current.view==='donors'||current.view==='donor'?'active':''} href="#donors">Donors</a><a className={current.view==='companies'?'active':''} href="#companies">Companies</a><a className={current.view==='map'?'active':''} href="#map">Map</a><a className={current.view==='about'?'active':''} href="#about">About</a></nav></div></header>
     <main>{loading?<div className="page-state">Loading donation records…</div>:<>
       {current.view==='home'&&<Home data={data} stats={stats}/>} 
       {current.view==='donations'&&<Page title="Donations database" eyebrow="Explore every record" intro="Search, filter, sort and choose which columns you want to compare."><DonationTable data={data} onSelect={setSelected}/></Page>}
       {current.view==='donors'&&<Page title="Donor profiles" eyebrow="Grouped by donor name" intro="Totals are grouped using the donor names exactly as they appear in the source data."><div className="donor-grid">{donors.map((d,i)=><a href={`#donor/${encodeURIComponent(d.name)}`} key={d.name} className="donor-card"><span>{String(i+1).padStart(2,'0')}</span><div><h2>{d.name}</h2><p>{d.count} donation{d.count===1?'':'s'} · Latest {formatDate(d.latest)}</p></div><strong>{formatMoney(d.total)}</strong><ArrowRight size={18}/></a>)}</div></Page>}
+      {current.view==='companies'&&<Page title="Which companies give the most?" eyebrow="Companies House SIC analysis" intro="Company donations ranked by value and grouped using official filed business activity codes."><CompaniesPage data={data}/></Page>}
       {current.view==='donor'&&<DonorProfile name={current.donor||''} data={donorData} onSelect={setSelected}/>} 
       {current.view==='map'&&<Page title="Where donations come from" eyebrow="Postcode-area view" intro="A privacy-conscious, approximate view using only broad postcode areas—not full postcodes or addresses."><PostcodeMap data={data} onSelect={setSelected}/></Page>}
       {current.view==='about'&&<About/>}

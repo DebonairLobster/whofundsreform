@@ -6,6 +6,7 @@ import './filters.css'
 import './pages.css'
 import './overrides.css'
 import './map.css'
+import './companies.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode><App/></React.StrictMode>,

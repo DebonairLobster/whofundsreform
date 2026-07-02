@@ -1,6 +1,6 @@
 # Who funds Reform UK?
 
-A searchable explorer for Reform UK donation records supplied in Electoral Commission-style CSV data. It includes statistics, fuzzy search, filters, selectable columns, donor profiles, a privacy-conscious postcode-area map, charts, and full record details.
+A searchable explorer for Reform UK donation records supplied in Electoral Commission-style CSV data. It includes statistics, fuzzy search, filters, selectable columns, donor profiles, Companies House SIC analysis, a privacy-conscious postcode-area map, charts, and full record details.
 
 ## Data
 
