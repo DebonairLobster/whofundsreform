@@ -17,6 +17,52 @@
     padding: 0 7px;
     font-size: 12px;
   }
+
+  .analysis,
+  .panel {
+    min-width: 0;
+  }
+
+  .panel {
+    overflow: hidden;
+  }
+
+  .panel .section-head {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .panel .section-head .muted {
+    flex-basis: 100%;
+  }
+
+  .table-shell th:first-child,
+  .table-shell td:first-child {
+    width: 190px;
+    min-width: 190px;
+    max-width: 190px;
+  }
+
+  .table-shell th:first-child {
+    background: #f9faf8;
+    z-index: 3;
+  }
+
+  .table-shell td:first-child {
+    background: #fff;
+    z-index: 2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .table-shell tbody tr:hover td:first-child,
+  .table-shell tbody tr:focus td:first-child {
+    background: #f1f6f3;
+  }
+
+  .page-hero h1 {
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 600px) {
@@ -70,6 +116,19 @@
 
   .bar-item span {
     font-size: 8px;
+  }
+}
+
+.industry-section > header {
+  height: auto;
+  min-height: 0;
+  position: static;
+  backdrop-filter: none;
+}
+
+@media (max-width: 700px) {
+  .industry-section > header h3 {
+    line-height: 1.12;
   }
 }
 
