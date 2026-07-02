@@ -1,0 +1,23 @@
+.industry-link {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid #e5e9e6;
+  background: #fff;
+  text-align: left;
+}
+.industry-link.active {
+  background: #edf5f1;
+  box-shadow: inset 3px 0 #0d6b52;
+}
+.industry-details-head > button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  border: 1px solid #cbd5ce;
+  background: #fff;
+  color: #0d6b52;
+  padding: 9px 12px;
+  margin-bottom: 24px;
+  font-weight: 700;
+  font-size: 12px;
+}
