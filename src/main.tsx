@@ -8,6 +8,7 @@ import './overrides.css'
 import './map.css'
 import './companies.css'
 import './companies-interactions.css'
+import './mobile-fixes.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode><App/></React.StrictMode>,

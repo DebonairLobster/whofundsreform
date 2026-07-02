@@ -1,0 +1,85 @@
+@media (max-width: 800px) {
+  .site-header nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .site-header nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .site-header nav a {
+    flex: 0 0 auto;
+    padding: 0 7px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    overflow: visible;
+    padding: 18px 0 40px;
+  }
+
+  .stat-grid article {
+    min-width: 0;
+    padding: 17px 14px;
+    border-bottom: 1px solid #dfe4df;
+  }
+
+  .stat-grid article:nth-child(even) {
+    border-right: 1px solid #dfe4df;
+  }
+
+  .stat-grid article:last-child {
+    grid-column: 1 / -1;
+    border-right: 1px solid #dfe4df;
+  }
+
+  .stat-grid strong {
+    font-size: 19px;
+  }
+
+  .stat-grid small {
+    white-space: normal;
+  }
+
+  .table-shell {
+    max-height: none;
+    overscroll-behavior-inline: contain;
+  }
+
+  .ref {
+    flex-wrap: wrap;
+    gap: 6px 14px;
+  }
+
+  .detail h2 {
+    overflow-wrap: anywhere;
+  }
+
+  .bars {
+    gap: 3px;
+  }
+
+  .bar-item span {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 360px) {
+  .site-header nav {
+    padding-inline: 4px;
+  }
+
+  .site-header nav a {
+    padding-inline: 5px;
+    font-size: 11px;
+  }
+}
