@@ -37,7 +37,7 @@ function App(){
       {current.view==='home'&&<Home data={data} stats={stats}/>} 
       {current.view==='donations'&&<Page title="Donations database" eyebrow="Explore every record" intro="Search, filter, sort and choose which columns you want to compare."><DonationTable data={data} onSelect={setSelected}/></Page>}
       {current.view==='donors'&&<Page title="Donor profiles" eyebrow="Grouped by donor name" intro="Totals are grouped using the donor names exactly as they appear in the source data."><div className="donor-grid">{donors.map((d,i)=><a href={`#donor/${encodeURIComponent(d.name)}`} key={d.name} className="donor-card"><span>{String(i+1).padStart(2,'0')}</span><div><h2>{d.name}</h2><p>{d.count} donation{d.count===1?'':'s'} · Latest {formatDate(d.latest)}</p></div><strong>{formatMoney(d.total)}</strong><ArrowRight size={18}/></a>)}</div></Page>}
-      {current.view==='companies'&&<Page title="Which companies give the most?" eyebrow="Companies House SIC analysis" intro="Company donations ranked by value and grouped using official filed business activity codes."><CompaniesPage data={data}/></Page>}
+      {current.view==='companies'&&<CompaniesPage data={data}/>} 
       {current.view==='donor'&&<DonorProfile name={current.donor||''} data={donorData} onSelect={setSelected}/>} 
       {current.view==='map'&&<Page title="Where donations come from" eyebrow="Postcode-area view" intro="A privacy-conscious, approximate view using only broad postcode areas—not full postcodes or addresses."><PostcodeMap data={data} onSelect={setSelected}/></Page>}
       {current.view==='about'&&<About/>}
