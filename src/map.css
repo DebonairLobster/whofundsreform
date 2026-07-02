@@ -8,6 +8,8 @@
 .donation-marker:hover > circle:first-child,
 .donation-marker:focus > circle:first-child { r: 8; fill-opacity: 1; stroke: #fff; stroke-width: 2.5; }
 .donation-marker:focus > circle:first-child { outline: none; }
+.donation-marker.area-muted { opacity: .13; }
+.donation-marker.area-selected > circle:first-child { r: 7; fill: #08765b; fill-opacity: 1; stroke-width: 2.4; }
 .map-tooltip { position: absolute; top: 18px; left: 18px; width: min(285px, calc(100% - 36px)); padding: 16px 18px; background: rgba(255,255,255,.96); border: 1px solid #cbd6ce; box-shadow: 0 12px 30px rgba(21,42,32,.13); display: flex; flex-direction: column; gap: 5px; pointer-events: none; z-index: 3; }
 .map-tooltip p { margin: 0 0 3px; color: #0d6b52; text-transform: uppercase; letter-spacing: .1em; font-size: 10px; font-weight: 800; }
 .map-tooltip strong { font: 20px/1.15 Georgia,serif; }
@@ -19,4 +21,17 @@
 .map-legend span { white-space: nowrap; font-weight: 700; color: #26322d; }
 .map-legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #0d6b52; margin-right: 7px; }
 .map-legend p { margin: 0; text-align: right; line-height: 1.45; }
+.area-ranking-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 10px; }
+.area-ranking-head h2 { margin: 0; }
+.area-ranking-head button { border: 0; background: transparent; color: #0d6b52; font-size: 12px; font-weight: 800; padding: 7px; }
+.area-list button,.area-donations button { width: 100%; border: 0; border-bottom: 1px solid #e3e8e4; background: #fff; display: grid; align-items: center; text-align: left; color: #17201d; }
+.area-list button { grid-template-columns: 42px 1fr auto; padding: 13px 0; }
+.area-list button:hover,.area-list button:focus,.area-donations button:hover,.area-donations button:focus { background: #f1f6f3; outline: 2px solid #0d6b52; outline-offset: -2px; }
+.area-list button span { font-size: 12px; color: #6c7772; }
+.area-list button b,.area-donations button b { font-size: 13px; }
+.area-donations button { grid-template-columns: minmax(0,1fr) auto; gap: 14px; padding: 14px 8px; }
+.area-donations button span { min-width: 0; }
+.area-donations button strong,.area-donations button small { display: block; }
+.area-donations button strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
+.area-donations button small { color: #6c7772; margin-top: 5px; }
 @media(max-width:600px){.uk-map-panel svg{height:520px}.map-tooltip{top:8px;left:8px;width:calc(100% - 16px);padding:12px}.map-tooltip strong{font-size:17px}.map-legend{display:block}.map-legend p{text-align:left;margin-top:8px}}
