@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import Papa from 'papaparse'
-import { ArrowRight, Database, MapPinned, Users } from 'lucide-react'
+import { ArrowRight, Database, MapPinned, TriangleAlert, Users } from 'lucide-react'
 import type { Donation, RawDonation } from './types'
 import { cleanDonation, formatDate, formatMoney } from './utils/data'
 import { Detail } from './components/Detail'
@@ -10,6 +10,12 @@ import { CompaniesPage } from './components/CompaniesPage'
 import { Timeline, TypeBreakdown } from './components/Charts'
 
 type View = 'home'|'donations'|'donors'|'companies'|'map'|'about'|'donor'
+const DATA_LAST_UPDATED = new Date(2026, 6, 1)
+const DATA_LAST_UPDATED_LABEL = '1 July 2026'
+const SOURCE_URL = 'https://search.electoralcommission.org.uk/Search/Donations?currentPage=1&rows=10&query=reform%20uk&sort=AcceptedDate&order=desc&tab=1&et=pp&et=ppm&et=tp&et=perpar&et=rd&isIrishSourceYes=true&isIrishSourceNo=true&prePoll=false&postPoll=true&register=gb&register=ni&register=none&optCols=RegisterName&optCols=CampaigningName&optCols=AccountingUnitsAsCentralParty&optCols=IsSponsorship&optCols=IsIrishSource&optCols=RegulatedDoneeType&optCols=CompanyRegistrationNumber&optCols=Postcode&optCols=NatureOfDonation&optCols=PurposeOfVisit&optCols=DonationAction&optCols=ReportedDate&optCols=IsReportedPrePoll&optCols=ReportingPeriodName&optCols=IsBequest&optCols=IsAggregation'
+const quarterlyReleaseHasPassed = (today=new Date()) => [2,5,8,11]
+  .flatMap(month=>[today.getFullYear()-1,today.getFullYear()].map(year=>new Date(year,month,5)))
+  .some(date=>date>DATA_LAST_UPDATED&&date<=today)
 const route = ():{view:View;donor?:string} => {
   const hash=window.location.hash.slice(1)||'home'
   if(hash.startsWith('donor/')) return {view:'donor',donor:decodeURIComponent(hash.slice(6))}
@@ -33,6 +39,7 @@ function App(){
   if(error)return <main className="state"><h1>Could not load the data</h1><p>{error}</p></main>
   return <>
     <header className="site-header"><div className="wrap nav"><a href="#home" className="brand"><span>WFR</span> Who funds Reform UK?</a><nav aria-label="Primary navigation"><a className={current.view==='donations'?'active':''} href="#donations">Donations</a><a className={current.view==='donors'||current.view==='donor'?'active':''} href="#donors">Donors</a><a className={current.view==='companies'?'active':''} href="#companies">Companies</a><a className={current.view==='map'?'active':''} href="#map">Map</a><a className={current.view==='about'?'active':''} href="#about">About</a></nav></div></header>
+    {quarterlyReleaseHasPassed()&&<aside className="data-warning" role="status"><div className="wrap"><TriangleAlert aria-hidden="true"/><p><strong>The data may be out of date.</strong> The quarterly Electoral Commission update date has passed. This site was last updated on {DATA_LAST_UPDATED_LABEL}.</p></div></aside>}
     <main>{loading?<div className="page-state">Loading donation records…</div>:<>
       {current.view==='home'&&<Home data={data} stats={stats}/>} 
       {current.view==='donations'&&<Page title="Donations database" eyebrow="Explore every record" intro="Search, filter, sort and choose which columns you want to compare."><DonationTable data={data} onSelect={setSelected}/></Page>}
@@ -55,6 +62,6 @@ function Page({title,eyebrow,intro,children}:{title:string;eyebrow:string;intro:
 
 function DonorProfile({name,data,onSelect}:{name:string;data:Donation[];onSelect:(d:Donation)=>void}){const total=data.reduce((s,d)=>s+d.amount,0),latest=data.reduce<Date|null>((m,d)=>d.acceptedDate&&(!m||d.acceptedDate>m)?d.acceptedDate:m,null);return <><section className="page-hero donor-hero"><div className="wrap"><a className="back-link" href="#donors">← All donor profiles</a><p className="eyebrow">Donor profile</p><h1>{name||'Donor not provided'}</h1><p>This profile groups records by the donor name exactly as supplied in the CSV.</p><div className="profile-stats"><div><span>Total recorded</span><strong>{formatMoney(total)}</strong></div><div><span>Donations</span><strong>{data.length}</strong></div><div><span>Most recent</span><strong>{formatDate(latest)}</strong></div></div></div></section><section className="page-content wrap"><h2 className="profile-heading">All donations from this donor name</h2>{data.length?<DonationTable data={data} onSelect={onSelect} compact/>:<div className="empty">No matching donor records were found.</div>}</section></>}
 
-function About(){return <section className="about-page"><div className="wrap"><p className="eyebrow">Data transparency</p><h1>About this database</h1><p>This site reads <code>public/results.csv</code> included in this project. Records are presented as supplied, with values and UK-format dates standardised for searching and sorting. Empty fields are shown as “Not provided”; no missing donor information is inferred or invented.</p><p>Donor profiles group exact donor-name strings and should not be interpreted as identity verification. The postcode map uses only the initial postcode area and deliberately avoids address-level display.</p><p>This is a neutral tool for exploring the source data. It does not make claims about donors, recipients, or the meaning of any donation beyond what appears in the dataset.</p></div></section>}
+function About(){return <section className="about-page"><div className="wrap"><p className="eyebrow">Data transparency</p><h1>About this database</h1><p>The donation records come from the <a href={SOURCE_URL} target="_blank" rel="noreferrer">Electoral Commission political donations search</a>. The project stores a copy as <code>public/results.csv</code>. This copy was last updated on <strong>{DATA_LAST_UPDATED_LABEL}</strong>.</p><p>The donations CSV is updated quarterly, on 5 March, 5 June, 5 September and 5 December. From each of those dates, the site automatically displays a warning until its stored CSV and last-updated date are refreshed.</p><p>Records are presented as supplied, with values and UK-format dates standardised for searching and sorting. Empty fields are shown as “Not provided”; no missing donor information is inferred or invented.</p><p>Donor profiles group exact donor-name strings and should not be interpreted as identity verification. The postcode map uses only the initial postcode area and deliberately avoids address-level display.</p><p>This is a neutral tool for exploring the source data. It does not make claims about donors, recipients, or the meaning of any donation beyond what appears in the dataset.</p></div></section>}
 
 export default App
