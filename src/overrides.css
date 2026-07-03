@@ -3,3 +3,4 @@
 .database-widget .column-picker > .filter-toggle svg:last-child { transition: transform 180ms ease; }
 .database-widget > .toolbar > .filter-toggle[aria-expanded='true'] svg:last-child,
 .database-widget .column-picker > .filter-toggle[aria-expanded='true'] svg:last-child { transform: rotate(180deg); }
+.database-widget .column-menu { max-height: min(70vh, 620px); overflow-y: auto; }

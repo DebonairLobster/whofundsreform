@@ -8,17 +8,21 @@ type ColumnKey = SortKey
 type Column = { key: ColumnKey; label: string; render: (donation: Donation) => React.ReactNode }
 
 const emptyFilters: Filters = { min:'', max:'', from:'', to:'', donorStatus:'', donationType:'', accountingUnit:'', sponsorship:'', bequest:'', aggregation:'' }
-const defaultColumns: ColumnKey[] = ['DonorName','amount','acceptedDate','DonationType','DonorStatus','AccountingUnitName','ReportingPeriodName','ECRef']
-const columns: Column[] = [
-  { key:'DonorName', label:'Donor name', render:d => <a className="donor-link" href={`#donor/${encodeURIComponent(d.DonorName)}`}>{d.DonorName || 'Not provided'}</a> },
-  { key:'amount', label:'Amount', render:d => <strong className="money">{formatMoney(d.amount)}</strong> },
-  { key:'acceptedDate', label:'Accepted date', render:d => formatDate(d.acceptedDate) },
-  { key:'DonationType', label:'Donation type', render:d => <span className="tag">{d.DonationType || '—'}</span> },
-  { key:'DonorStatus', label:'Donor status', render:d => d.DonorStatus || '—' },
-  { key:'AccountingUnitName', label:'Accounting unit', render:d => d.AccountingUnitName || '—' },
-  { key:'ReportingPeriodName', label:'Reporting period', render:d => d.ReportingPeriodName || '—' },
-  { key:'ECRef', label:'EC reference', render:d => <span className="mono">{d.ECRef || '—'}</span> },
-]
+const csvFields = ['ECRef','RegulatedEntityName','RegulatedEntityType','Value','AcceptedDate','AccountingUnitName','DonorName','AccountingUnitsAsCentralParty','IsSponsorship','DonorStatus','RegulatedDoneeType','CompanyRegistrationNumber','Postcode','DonationType','NatureOfDonation','PurposeOfVisit','DonationAction','ReceivedDate','ReportedDate','IsReportedPrePoll','ReportingPeriodName','IsBequest','IsAggregation','RegulatedEntityId','AccountingUnitId','DonorId','CampaigningName','RegisterName','IsIrishSource'] as const
+const labels:Record<string,string>={ECRef:'EC reference',RegulatedEntityName:'Regulated entity',RegulatedEntityType:'Regulated entity type',Value:'Value',AcceptedDate:'Accepted date',AccountingUnitName:'Accounting unit',DonorName:'Donor name',AccountingUnitsAsCentralParty:'Accounting units as central party',IsSponsorship:'Sponsorship',DonorStatus:'Donor status',RegulatedDoneeType:'Regulated donee type',CompanyRegistrationNumber:'Company registration number',Postcode:'Postcode',DonationType:'Donation type',NatureOfDonation:'Nature of donation',PurposeOfVisit:'Purpose of visit',DonationAction:'How dealt with',ReceivedDate:'Received date',ReportedDate:'Reported date',IsReportedPrePoll:'Reported pre-poll',ReportingPeriodName:'Reporting period',IsBequest:'Bequest',IsAggregation:'Aggregation',RegulatedEntityId:'Regulated entity ID',AccountingUnitId:'Accounting unit ID',DonorId:'Donor ID',CampaigningName:'Campaigning name',RegisterName:'Register name',IsIrishSource:'Irish source'}
+const dateFields:Record<string,keyof Pick<Donation,'acceptedDate'|'receivedDate'|'reportedDate'>>={AcceptedDate:'acceptedDate',ReceivedDate:'receivedDate',ReportedDate:'reportedDate'}
+const booleanFields=new Set(['AccountingUnitsAsCentralParty','IsSponsorship','IsReportedPrePoll','IsBequest','IsAggregation','IsIrishSource'])
+const renderField=(key:string,d:Donation):React.ReactNode=>{
+  if(key==='DonorName')return <a className="donor-link" href={`#donor/${encodeURIComponent(d.DonorName)}`}>{d.DonorName||'Not provided'}</a>
+  if(key==='Value')return <strong className="money">{formatMoney(d.amount)}</strong>
+  if(dateFields[key])return formatDate(d[dateFields[key]])
+  const value=d.raw[key]?.trim()
+  if(booleanFields.has(key))return value?value.toLowerCase()==='true'?'Yes':'No':'Not provided'
+  if(key==='DonationType')return <span className="tag">{value||'Not provided'}</span>
+  if(key==='ECRef')return <span className="mono">{value||'Not provided'}</span>
+  return value||'Not provided'
+}
+const defaultColumns:ColumnKey[]=['DonorName','Value','DonorStatus','DonationType','DonationAction','ReportingPeriodName']
 
 export function DonationTable({ data, onSelect, compact = false }: { data: Donation[]; onSelect: (d: Donation) => void; compact?: boolean }) {
   const [query,setQuery] = useState('')
@@ -26,9 +30,13 @@ export function DonationTable({ data, onSelect, compact = false }: { data: Donat
   const [filtersOpen,setFiltersOpen] = useState(false)
   const [columnsOpen,setColumnsOpen] = useState(false)
   const [visibleColumns,setVisibleColumns] = useState<ColumnKey[]>(defaultColumns)
-  const [sort,setSort] = useState<{key:SortKey;dir:'asc'|'desc'}>({key:'acceptedDate',dir:'desc'})
+  const [sort,setSort] = useState<{key:SortKey;dir:'asc'|'desc'}>({key:'Value',dir:'desc'})
   const [page,setPage] = useState(1)
   const pageSize = compact ? 10 : 20
+  const columns=useMemo<Column[]>(()=>{
+    const keys=[...new Set<string>([...csvFields,...data.flatMap(d=>Object.keys(d.raw))])]
+    return keys.map(key=>({key,label:labels[key]||key.replace(/([A-Z])/g,' $1').trim(),render:d=>renderField(key,d)}))
+  },[data])
   const options = (key:'DonorStatus'|'DonationType'|'AccountingUnitName') => [...new Set(data.map(d=>d[key]).filter(Boolean))].sort()
 
   const searched = useMemo(() => {
@@ -38,12 +46,12 @@ export function DonationTable({ data, onSelect, compact = false }: { data: Donat
     return direct.length ? direct : new Fuse(data,{threshold:.28,ignoreLocation:true,keys:[...keys]}).search(q).map(x=>x.item)
   },[data,query])
   const filtered = useMemo(() => { const from=normaliseDateInput(filters.from),to=normaliseDateInput(filters.to); return searched.filter(d=>(!filters.min||d.amount>=+filters.min)&&(!filters.max||d.amount<=+filters.max)&&(!from||!!d.acceptedDate&&d.acceptedDate>=from)&&(!to||!!d.acceptedDate&&d.acceptedDate<=to)&&(!filters.donorStatus||d.DonorStatus===filters.donorStatus)&&(!filters.donationType||d.DonationType===filters.donationType)&&(!filters.accountingUnit||d.AccountingUnitName===filters.accountingUnit)&&(!filters.sponsorship||String(d.IsSponsorship)===filters.sponsorship)&&(!filters.bequest||String(d.IsBequest)===filters.bequest)&&(!filters.aggregation||String(d.IsAggregation)===filters.aggregation)) },[searched,filters])
-  const sorted = useMemo(() => [...filtered].sort((a,b)=>{const av=sort.key==='acceptedDate'?(a.acceptedDate?.getTime()??-1):a[sort.key],bv=sort.key==='acceptedDate'?(b.acceptedDate?.getTime()??-1):b[sort.key];return(typeof av==='number'?av-(bv as number):String(av).localeCompare(String(bv)))*(sort.dir==='asc'?1:-1)}),[filtered,sort])
+  const sorted = useMemo(() => [...filtered].sort((a,b)=>{const dateKey=dateFields[sort.key],av=sort.key==='Value'?a.amount:dateKey?(a[dateKey]?.getTime()??-1):(a.raw[sort.key]||''),bv=sort.key==='Value'?b.amount:dateKey?(b[dateKey]?.getTime()??-1):(b.raw[sort.key]||'');return(typeof av==='number'?av-(bv as number):String(av).localeCompare(String(bv),undefined,{numeric:true}))*(sort.dir==='asc'?1:-1)}),[filtered,sort])
   const pages=Math.max(1,Math.ceil(sorted.length/pageSize)), rows=sorted.slice((page-1)*pageSize,page*pageSize), active=Object.values(filters).filter(Boolean).length
   useEffect(()=>setPage(1),[query,filters]); useEffect(()=>{if(page>pages)setPage(pages)},[page,pages])
   const toggleColumn=(key:ColumnKey)=>setVisibleColumns(v=>v.includes(key)?(v.length===1?v:v.filter(x=>x!==key)):[...v,key])
   const sortBy=(key:SortKey)=>setSort(s=>({key,dir:s.key===key&&s.dir==='desc'?'asc':'desc'}))
-  const shown=columns.filter(c=>visibleColumns.includes(c.key))
+  const shown=visibleColumns.map(key=>columns.find(c=>c.key===key)).filter((column):column is Column=>!!column)
 
   return <div className="database-widget">
     <div className="toolbar">
